@@ -6,9 +6,9 @@
  *
  */
 
-import {useEffect, useRef, useState} from 'react';
-import * as React from 'react';
-import {createPortal} from 'react-dom';
+import { useEffect, useRef, useState } from 'react'
+import * as React from 'react'
+import { createPortal } from 'react-dom'
 
 export default function DropDown({
   buttonLabel,
@@ -18,51 +18,51 @@ export default function DropDown({
   children,
   stopCloseOnClickSelf,
 }: {
-  buttonAriaLabel?: string;
-  buttonClassName: string;
-  buttonIconClassName?: string;
-  buttonLabel?: string;
-  children: JSX.Element | string | (JSX.Element | string)[];
-  stopCloseOnClickSelf?: boolean;
+  buttonAriaLabel?: string
+  buttonClassName: string
+  buttonIconClassName?: string
+  buttonLabel?: string
+  children: JSX.Element | string | (JSX.Element | string)[]
+  stopCloseOnClickSelf?: boolean
 }): JSX.Element {
-  const dropDownRef = useRef<HTMLDivElement | null>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const [showDropDown, setShowDropDown] = useState(false);
+  const dropDownRef = useRef<HTMLDivElement | null>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const [showDropDown, setShowDropDown] = useState(false)
 
   useEffect(() => {
-    const button = buttonRef.current;
-    const dropDown = dropDownRef.current;
+    const button = buttonRef.current
+    const dropDown = dropDownRef.current
 
     if (showDropDown && button !== null && dropDown !== null) {
-      const {top, left} = button.getBoundingClientRect();
-      dropDown.style.top = `${top + 40}px`;
+      const { top, left } = button.getBoundingClientRect()
+      dropDown.style.top = `${top + 40}px`
       dropDown.style.left = `${Math.min(
         left,
-        window.innerWidth - dropDown.offsetWidth - 20,
-      )}px`;
+        window.innerWidth - dropDown.offsetWidth - 20
+      )}px`
     }
-  }, [dropDownRef, buttonRef, showDropDown]);
+  }, [dropDownRef, buttonRef, showDropDown])
 
   useEffect(() => {
-    const button = buttonRef.current;
+    const button = buttonRef.current
 
     if (button !== null && showDropDown) {
       const handle = (event: MouseEvent) => {
-        const target = event.target;
+        const target = event.target
         if (stopCloseOnClickSelf) {
-          if (dropDownRef.current.contains(target as Node)) return;
+          if (dropDownRef.current.contains(target as Node)) return
         }
         if (!button.contains(target as Node)) {
-          setShowDropDown(false);
+          setShowDropDown(false)
         }
-      };
-      document.addEventListener('click', handle);
+      }
+      document.addEventListener('click', handle)
 
       return () => {
-        document.removeEventListener('click', handle);
-      };
+        document.removeEventListener('click', handle)
+      }
     }
-  }, [dropDownRef, buttonRef, showDropDown, stopCloseOnClickSelf]);
+  }, [dropDownRef, buttonRef, showDropDown, stopCloseOnClickSelf])
 
   return (
     <>
@@ -70,7 +70,8 @@ export default function DropDown({
         aria-label={buttonAriaLabel || buttonLabel}
         className={buttonClassName}
         onClick={() => setShowDropDown(!showDropDown)}
-        ref={buttonRef}>
+        ref={buttonRef}
+      >
         {buttonIconClassName && <span className={buttonIconClassName} />}
         {buttonLabel && (
           <span className="text dropdown-button-text">{buttonLabel}</span>
@@ -83,8 +84,8 @@ export default function DropDown({
           <div className="dropdown" ref={dropDownRef}>
             {children}
           </div>,
-          document.body,
+          document.body
         )}
     </>
-  );
+  )
 }

@@ -6,30 +6,30 @@
  *
  */
 
-import type {ElementFormatType, LexicalNode, NodeKey} from 'lexical';
+import type { ElementFormatType, LexicalNode, NodeKey } from 'lexical'
 
-import {BlockWithAlignableContents} from '@lexical/react/LexicalBlockWithAlignableContents';
+import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents'
 import {
   DecoratorBlockNode,
   SerializedDecoratorBlockNode,
-} from '@lexical/react/LexicalDecoratorBlockNode';
-import {Spread} from 'globals';
-import * as React from 'react';
-import {useCallback, useEffect, useRef, useState} from 'react';
+} from '@lexical/react/LexicalDecoratorBlockNode'
+import { Spread } from 'globals'
+import * as React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-const WIDGET_SCRIPT_URL = 'https://platform.twitter.com/widgets.js';
+const WIDGET_SCRIPT_URL = 'https://platform.twitter.com/widgets.js'
 
 const getHasScriptCached = () =>
-  document.querySelector(`script[src="${WIDGET_SCRIPT_URL}"]`);
+  document.querySelector(`script[src="${WIDGET_SCRIPT_URL}"]`)
 
 type TweetComponentProps = Readonly<{
-  format: ElementFormatType | null;
-  loadingComponent?: JSX.Element | string;
-  nodeKey: NodeKey;
-  onError?: (error: string) => void;
-  onLoad?: () => void;
-  tweetID: string;
-}>;
+  format: ElementFormatType | null
+  loadingComponent?: JSX.Element | string
+  nodeKey: NodeKey
+  onError?: (error: string) => void
+  onLoad?: () => void
+  tweetID: string
+}>
 
 function TweetComponent({
   format,
@@ -39,84 +39,84 @@ function TweetComponent({
   onLoad,
   tweetID,
 }: TweetComponentProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null)
 
-  const previousTweetIDRef = useRef<string>('');
-  const [isLoading, setIsLoading] = useState(false);
+  const previousTweetIDRef = useRef<string>('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const createTweet = useCallback(async () => {
     try {
       // @ts-expect-error Twitter is attached to the window.
-      await window.twttr.widgets.createTweet(tweetID, containerRef.current);
+      await window.twttr.widgets.createTweet(tweetID, containerRef.current)
 
-      setIsLoading(false);
+      setIsLoading(false)
 
       if (onLoad) {
-        onLoad();
+        onLoad()
       }
     } catch (error) {
       if (onError) {
-        onError(String(error));
+        onError(String(error))
       }
     }
-  }, [onError, onLoad, tweetID]);
+  }, [onError, onLoad, tweetID])
 
   useEffect(() => {
     if (tweetID !== previousTweetIDRef.current) {
-      setIsLoading(true);
+      setIsLoading(true)
 
       if (!getHasScriptCached()) {
-        const script = document.createElement('script');
-        script.src = WIDGET_SCRIPT_URL;
-        script.async = true;
-        document.body?.appendChild(script);
-        script.onload = createTweet;
-        script.onerror = onError;
+        const script = document.createElement('script')
+        script.src = WIDGET_SCRIPT_URL
+        script.async = true
+        document.body?.appendChild(script)
+        script.onload = createTweet
+        script.onerror = onError
       } else {
-        createTweet();
+        createTweet()
       }
 
       if (previousTweetIDRef) {
-        previousTweetIDRef.current = tweetID;
+        previousTweetIDRef.current = tweetID
       }
     }
-  }, [createTweet, onError, tweetID]);
+  }, [createTweet, onError, tweetID])
 
   return (
     <BlockWithAlignableContents format={format} nodeKey={nodeKey}>
       {isLoading ? loadingComponent : null}
       <div
-        style={{display: 'inline-block', width: '550px'}}
+        style={{ display: 'inline-block', width: '550px' }}
         ref={containerRef}
       />
     </BlockWithAlignableContents>
-  );
+  )
 }
 
 export type SerializedTweetNode = Spread<
   {
-    id: string;
-    type: 'tweet';
-    version: 1;
+    id: string
+    type: 'tweet'
+    version: 1
   },
   SerializedDecoratorBlockNode
->;
+>
 
 export class TweetNode extends DecoratorBlockNode<JSX.Element> {
-  __id: string;
+  __id: string
 
   static getType(): string {
-    return 'tweet';
+    return 'tweet'
   }
 
   static clone(node: TweetNode): TweetNode {
-    return new TweetNode(node.__id, node.__format, node.__key);
+    return new TweetNode(node.__id, node.__format, node.__key)
   }
 
   static importJSON(serializedNode: SerializedTweetNode): TweetNode {
-    const node = $createTweetNode(serializedNode.id);
-    node.setFormat(serializedNode.format);
-    return node;
+    const node = $createTweetNode(serializedNode.id)
+    node.setFormat(serializedNode.format)
+    return node
   }
 
   exportJSON(): SerializedTweetNode {
@@ -125,16 +125,16 @@ export class TweetNode extends DecoratorBlockNode<JSX.Element> {
       id: this.getId(),
       type: 'tweet',
       version: 1,
-    };
+    }
   }
 
   constructor(id: string, format?: ElementFormatType | null, key?: NodeKey) {
-    super(format, key);
-    this.__id = id;
+    super(format, key)
+    this.__id = id
   }
 
   getId(): string {
-    return this.__id;
+    return this.__id
   }
 
   decorate(): JSX.Element {
@@ -145,20 +145,20 @@ export class TweetNode extends DecoratorBlockNode<JSX.Element> {
         nodeKey={this.getKey()}
         tweetID={this.__id}
       />
-    );
+    )
   }
 
   isTopLevel(): true {
-    return true;
+    return true
   }
 }
 
 export function $createTweetNode(tweetID: string): TweetNode {
-  return new TweetNode(tweetID);
+  return new TweetNode(tweetID)
 }
 
 export function $isTweetNode(
-  node: TweetNode | LexicalNode | null | undefined,
+  node: TweetNode | LexicalNode | null | undefined
 ): node is TweetNode {
-  return node instanceof TweetNode;
+  return node instanceof TweetNode
 }
