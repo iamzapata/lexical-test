@@ -22,8 +22,7 @@ export type Settings = Record<SettingName, boolean>
 
 const hostName = window.location.hostname
 export const isDevPlayground: boolean =
-  hostName !== 'playground.lexical.dev' &&
-  hostName !== 'lexical-playground.vercel.app'
+  hostName === 'localhost:3000' || hostName === 'lexical-test.vercel.app'
 
 export const DEFAULT_SETTINGS: Settings = {
   disableBeforeInput: false,
