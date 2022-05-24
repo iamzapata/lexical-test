@@ -153,6 +153,7 @@ export default function Editor(): JSX.Element {
       emptyEditor,
     },
   } = useSettings()
+  console.warn
   const text = isCollab
     ? 'Enter some collaborative rich text...'
     : isRichText
