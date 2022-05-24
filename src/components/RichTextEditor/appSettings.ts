@@ -22,11 +22,11 @@ export type Settings = Record<SettingName, boolean>
 
 const hostName = window.location.hostname
 export const isDevPlayground: boolean =
-  hostName === 'localhost:3000' || hostName === 'lexical-test.vercel.app'
+  hostName === 'localhost' || hostName === 'lexical-test.vercel.app'
 
 export const DEFAULT_SETTINGS: Settings = {
   disableBeforeInput: false,
-  emptyEditor: isDevPlayground,
+  emptyEditor: !isDevPlayground,
   isAutocomplete: false,
   isCharLimit: false,
   isCharLimitUtf8: false,

@@ -28,6 +28,7 @@ export default function Settings(): JSX.Element {
       showNestedEditorTreeView,
       disableBeforeInput,
     },
+    settings,
   } = useSettings()
   const [showSettings, setShowSettings] = useState(false)
   const [isSplitScreen, search] = useMemo(() => {
@@ -37,6 +38,8 @@ export default function Settings(): JSX.Element {
       parentWindow && parentWindow.location.pathname === '/split/'
     return [_isSplitScreen, _search]
   }, [windowLocation])
+
+  console.warn({ settings, isRichText, isDevPlayground })
 
   return (
     <>
