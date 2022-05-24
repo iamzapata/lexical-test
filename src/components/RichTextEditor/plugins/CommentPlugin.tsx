@@ -24,13 +24,13 @@ import {
   $wrapSelectionInMarkNode,
   MarkNode,
 } from '@lexical/mark'
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
-import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin'
-import { LexicalComposer } from '@lexical/react/LexicalComposer'
+import AutoFocusPlugin from '@lexical/react/LexicalAutoFocusPlugin'
+import ClearEditorPlugin from '@lexical/react/LexicalClearEditorPlugin'
+import LexicalComposer from '@lexical/react/LexicalComposer'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
-import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin'
+import OnChangePlugin from '@lexical/react/LexicalOnChangePlugin'
+import PlainTextPlugin from '@lexical/react/LexicalPlainTextPlugin'
 import { createDOMRange, createRectsFromDOMRange } from '@lexical/selection'
 import { $isRootTextContentEmpty, $rootTextContentCurry } from '@lexical/text'
 import { mergeRegister, registerNestedElementResolver } from '@lexical/utils'
