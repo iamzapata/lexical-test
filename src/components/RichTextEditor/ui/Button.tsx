@@ -6,11 +6,11 @@
  *
  */
 
-import './Button.css'
+import './Button.css';
 
-import * as React from 'react'
+import * as React from 'react';
 
-import joinClasses from '../utils/join-classes'
+import joinClasses from '../utils/join-classes';
 
 export default function Button({
   'data-test-id': dataTestId,
@@ -21,13 +21,13 @@ export default function Button({
   small,
   title,
 }: {
-  'data-test-id'?: string
-  children: JSX.Element | string | (JSX.Element | string)[]
-  className?: string
-  disabled?: boolean
-  onClick: () => void
-  small?: boolean
-  title?: string
+  'data-test-id'?: string;
+  children: JSX.Element | string | (JSX.Element | string)[];
+  className?: string;
+  disabled?: boolean;
+  onClick: () => void;
+  small?: boolean;
+  title?: string;
 }): JSX.Element {
   return (
     <button
@@ -36,14 +36,13 @@ export default function Button({
         'Button__root',
         disabled && 'Button__disabled',
         small && 'Button__small',
-        className
+        className,
       )}
       onClick={onClick}
       title={title}
       aria-label={title}
-      {...(dataTestId && { 'data-test-id': dataTestId })}
-    >
+      {...(dataTestId && {'data-test-id': dataTestId})}>
       {children}
     </button>
-  )
+  );
 }

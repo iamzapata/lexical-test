@@ -7,32 +7,32 @@
  */
 
 export type CommentContextType = {
-  isActive: boolean
-  setActive: (val: boolean) => void
-}
+  isActive: boolean;
+  setActive: (val: boolean) => void;
+};
 
 export type Comment = {
-  author: string
-  content: string
-  id: string
-  timeStamp: number
-  type: 'comment'
-}
+  author: string;
+  content: string;
+  id: string;
+  timeStamp: number;
+  type: 'comment';
+};
 
 export type Thread = {
-  comments: Array<Comment>
-  id: string
-  quote: string
-  type: 'thread'
-}
+  comments: Array<Comment>;
+  id: string;
+  quote: string;
+  type: 'thread';
+};
 
-export type Comments = Array<Thread | Comment>
+export type Comments = Array<Thread | Comment>;
 
 function createUID(): string {
   return Math.random()
     .toString(36)
     .replace(/[^a-z]+/g, '')
-    .substr(0, 5)
+    .substr(0, 5);
 }
 
 export function createComment(content: string): Comment {
@@ -42,7 +42,7 @@ export function createComment(content: string): Comment {
     id: createUID(),
     timeStamp: performance.now(),
     type: 'comment',
-  }
+  };
 }
 
 export function createThread(quote: string, content: string): Thread {
@@ -51,7 +51,7 @@ export function createThread(quote: string, content: string): Thread {
     id: createUID(),
     quote,
     type: 'thread',
-  }
+  };
 }
 
 export function cloneThread(thread: Thread): Thread {
@@ -60,5 +60,5 @@ export function cloneThread(thread: Thread): Thread {
     id: thread.id,
     quote: thread.quote,
     type: 'thread',
-  }
+  };
 }

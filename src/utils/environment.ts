@@ -4,15 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
+ * @flow strict
  */
 
-export const CAN_USE_DOM: boolean =
-  typeof window !== 'undefined' &&
-  typeof window.document !== 'undefined' &&
-  typeof window.document.createElement !== 'undefined'
+import { CAN_USE_DOM } from '@utils/canUseDOM'
 
 const documentMode =
-  // @ts-ignore
   CAN_USE_DOM && 'documentMode' in document ? document.documentMode : null
 
 export const IS_APPLE: boolean =
@@ -27,12 +24,11 @@ export const CAN_USE_BEFORE_INPUT: boolean =
     : false
 
 export const IS_SAFARI: boolean =
-  CAN_USE_DOM && /Version\/[\d.]+.*Safari/.test(navigator.userAgent)
+  CAN_USE_DOM && /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
 
 export const IS_IOS: boolean =
   CAN_USE_DOM &&
   /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-  // @ts-ignore
   !window.MSStream
 
 // Keep these in case we need to use them in the future.

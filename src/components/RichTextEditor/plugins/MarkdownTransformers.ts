@@ -10,19 +10,19 @@ import type {
   ElementTransformer,
   TextMatchTransformer,
   Transformer,
-} from '@lexical/markdown'
-import type { ElementNode, LexicalNode } from 'lexical'
+} from '@lexical/markdown';
+import type {ElementNode, LexicalNode} from 'lexical';
 
 import {
   CHECK_LIST,
   ELEMENT_TRANSFORMERS,
   TEXT_FORMAT_TRANSFORMERS,
   TEXT_MATCH_TRANSFORMERS,
-} from '@lexical/markdown'
+} from '@lexical/markdown';
 import {
   $createHorizontalRuleNode,
   $isHorizontalRuleNode,
-} from '@lexical/react/LexicalHorizontalRuleNode'
+} from '@lexical/react/LexicalHorizontalRuleNode';
 import {
   $createTableCellNode,
   $createTableNode,
@@ -32,227 +32,227 @@ import {
   TableCellHeaderStates,
   TableCellNode,
   TableNode,
-} from '@lexical/table'
+} from '@lexical/table';
 import {
   $createParagraphNode,
   $createTextNode,
   $isElementNode,
   $isParagraphNode,
   $isTextNode,
-} from 'lexical'
+} from 'lexical';
 
-import { $createEquationNode, $isEquationNode } from '../nodes/EquationNode'
-import { $createImageNode, $isImageNode } from '../nodes/ImageNode'
-import { $createTweetNode, $isTweetNode } from '../nodes/TweetNode'
+import {$createEquationNode, $isEquationNode} from '../nodes/EquationNode';
+import {$createImageNode, $isImageNode} from '../nodes/ImageNode';
+import {$createTweetNode, $isTweetNode} from '../nodes/TweetNode';
 
 export const HR: ElementTransformer = {
   export: (node: LexicalNode) => {
-    return $isHorizontalRuleNode(node) ? '***' : null
+    return $isHorizontalRuleNode(node) ? '***' : null;
   },
   regExp: /^(---|\*\*\*|___)\s?$/,
   replace: (parentNode, _1, _2, isImport) => {
-    const line = $createHorizontalRuleNode()
+    const line = $createHorizontalRuleNode();
 
     // TODO: Get rid of isImport flag
     if (isImport || parentNode.getNextSibling() != null) {
-      parentNode.replace(line)
+      parentNode.replace(line);
     } else {
-      parentNode.insertBefore(line)
+      parentNode.insertBefore(line);
     }
 
-    line.selectNext()
+    line.selectNext();
   },
   type: 'element',
-}
+};
 
 export const IMAGE: TextMatchTransformer = {
   export: (node, exportChildren, exportFormat) => {
     if (!$isImageNode(node)) {
-      return null
+      return null;
     }
 
-    return `![${node.getAltText()}](${node.getSrc()})`
+    return `![${node.getAltText()}](${node.getSrc()})`;
   },
   importRegExp: /!(?:\[([^[]*)\])(?:\(([^(]+)\))/,
   regExp: /!(?:\[([^[]*)\])(?:\(([^(]+)\))$/,
   replace: (textNode, match) => {
-    const [, altText, src] = match
+    const [, altText, src] = match;
     const imageNode = $createImageNode({
       altText,
       maxWidth: 800,
       src,
-    })
-    textNode.replace(imageNode)
+    });
+    textNode.replace(imageNode);
   },
   trigger: ')',
   type: 'text-match',
-}
+};
 
 export const EQUATION: TextMatchTransformer = {
   export: (node, exportChildren, exportFormat) => {
     if (!$isEquationNode(node)) {
-      return null
+      return null;
     }
 
-    return `$${node.getEquation()}$`
+    return `$${node.getEquation()}$`;
   },
   importRegExp: /\$([^$].+?)\$/,
   regExp: /\$([^$].+?)\$$/,
   replace: (textNode, match) => {
-    const [, equation] = match
-    const equationNode = $createEquationNode(equation, true)
-    textNode.replace(equationNode)
+    const [, equation] = match;
+    const equationNode = $createEquationNode(equation, true);
+    textNode.replace(equationNode);
   },
   trigger: '$',
   type: 'text-match',
-}
+};
 
 export const TWEET: ElementTransformer = {
   export: (node) => {
     if (!$isTweetNode(node)) {
-      return null
+      return null;
     }
 
-    return `<tweet id="${node.getId()}" />`
+    return `<tweet id="${node.getId()}" />`;
   },
   regExp: /<tweet id="([^"]+?)"\s?\/>\s?$/,
   replace: (textNode, _1, match) => {
-    const [, id] = match
-    const tweetNode = $createTweetNode(id)
-    textNode.replace(tweetNode)
+    const [, id] = match;
+    const tweetNode = $createTweetNode(id);
+    textNode.replace(tweetNode);
   },
   type: 'element',
-}
+};
 
 // Very primitive table setup
-const TABLE_ROW_REG_EXP = /^(?:\|)(.+)(?:\|)\s?$/
+const TABLE_ROW_REG_EXP = /^(?:\|)(.+)(?:\|)\s?$/;
 
 export const TABLE: ElementTransformer = {
   export: (
     node: LexicalNode,
-    exportChildren: (elementNode: ElementNode) => string
+    exportChildren: (elementNode: ElementNode) => string,
   ) => {
     if (!$isTableNode(node)) {
-      return null
+      return null;
     }
 
-    const output = []
+    const output = [];
 
     for (const row of node.getChildren()) {
-      const rowOutput = []
+      const rowOutput = [];
 
       if ($isTableRowNode(row)) {
         for (const cell of row.getChildren()) {
           // It's TableCellNode (hence ElementNode) so it's just to make flow happy
           if ($isElementNode(cell)) {
-            rowOutput.push(exportChildren(cell))
+            rowOutput.push(exportChildren(cell));
           }
         }
       }
 
-      output.push(`| ${rowOutput.join(' | ')} |`)
+      output.push(`| ${rowOutput.join(' | ')} |`);
     }
 
-    return output.join('\n')
+    return output.join('\n');
   },
   regExp: TABLE_ROW_REG_EXP,
   replace: (parentNode, _1, match) => {
-    const matchCells = mapToTableCells(match[0])
+    const matchCells = mapToTableCells(match[0]);
 
     if (matchCells == null) {
-      return
+      return;
     }
 
-    const rows = [matchCells]
-    let sibling = parentNode.getPreviousSibling()
-    let maxCells = matchCells.length
+    const rows = [matchCells];
+    let sibling = parentNode.getPreviousSibling();
+    let maxCells = matchCells.length;
 
     while (sibling) {
       if (!$isParagraphNode(sibling)) {
-        break
+        break;
       }
 
       if (sibling.getChildrenSize() !== 1) {
-        break
+        break;
       }
 
-      const firstChild = sibling.getFirstChild()
+      const firstChild = sibling.getFirstChild();
 
       if (!$isTextNode(firstChild)) {
-        break
+        break;
       }
 
-      const cells = mapToTableCells(firstChild.getTextContent())
+      const cells = mapToTableCells(firstChild.getTextContent());
 
       if (cells == null) {
-        break
+        break;
       }
 
-      maxCells = Math.max(maxCells, cells.length)
-      rows.unshift(cells)
-      const previousSibling = sibling.getPreviousSibling()
-      sibling.remove()
-      sibling = previousSibling
+      maxCells = Math.max(maxCells, cells.length);
+      rows.unshift(cells);
+      const previousSibling = sibling.getPreviousSibling();
+      sibling.remove();
+      sibling = previousSibling;
     }
 
-    const table = $createTableNode()
+    const table = $createTableNode();
 
     for (const cells of rows) {
-      const tableRow = $createTableRowNode()
-      table.append(tableRow)
+      const tableRow = $createTableRowNode();
+      table.append(tableRow);
 
       for (let i = 0; i < maxCells; i++) {
-        tableRow.append(i < cells.length ? cells[i] : createTableCell(null))
+        tableRow.append(i < cells.length ? cells[i] : createTableCell(null));
       }
     }
 
-    const previousSibling = parentNode.getPreviousSibling()
+    const previousSibling = parentNode.getPreviousSibling();
     if (
       $isTableNode(previousSibling) &&
       getTableColumnsSize(previousSibling) === maxCells
     ) {
-      previousSibling.append(...table.getChildren())
-      parentNode.remove()
+      previousSibling.append(...table.getChildren());
+      parentNode.remove();
     } else {
-      parentNode.replace(table)
+      parentNode.replace(table);
     }
 
-    table.selectEnd()
+    table.selectEnd();
   },
   type: 'element',
-}
+};
 
 function getTableColumnsSize(table: TableNode) {
-  const row = table.getFirstChild()
-  return $isTableRowNode(row) ? row.getChildrenSize() : 0
+  const row = table.getFirstChild();
+  return $isTableRowNode(row) ? row.getChildrenSize() : 0;
 }
 
 const createTableCell = (
-  textContent: string | null | undefined
+  textContent: string | null | undefined,
 ): TableCellNode => {
-  const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS)
-  const paragraph = $createParagraphNode()
+  const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS);
+  const paragraph = $createParagraphNode();
 
   if (textContent != null) {
-    paragraph.append($createTextNode(textContent.trim()))
+    paragraph.append($createTextNode(textContent.trim()));
   }
 
-  cell.append(paragraph)
-  return cell
-}
+  cell.append(paragraph);
+  return cell;
+};
 
 const mapToTableCells = (textContent: string): Array<TableCellNode> | null => {
   // TODO:
   // For now plain text, single node. Can be expanded to more complex content
   // including formatted text
-  const match = textContent.match(TABLE_ROW_REG_EXP)
+  const match = textContent.match(TABLE_ROW_REG_EXP);
 
   if (!match || !match[1]) {
-    return null
+    return null;
   }
 
-  return match[1].split('|').map((text) => createTableCell(text))
-}
+  return match[1].split('|').map((text) => createTableCell(text));
+};
 
 export const PLAYGROUND_TRANSFORMERS: Array<Transformer> = [
   TABLE,
@@ -264,4 +264,4 @@ export const PLAYGROUND_TRANSFORMERS: Array<Transformer> = [
   ...ELEMENT_TRANSFORMERS,
   ...TEXT_FORMAT_TRANSFORMERS,
   ...TEXT_MATCH_TRANSFORMERS,
-]
+];

@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force & yarn ws",
+    "ws": "HOST=localhost PORT=1212 npx y-websocket",
     "build:ts": "tsc && vite build",
     "build": "vite build",
     "preview": "vite preview",

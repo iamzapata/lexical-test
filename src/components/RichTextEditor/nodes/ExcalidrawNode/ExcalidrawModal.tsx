@@ -6,43 +6,43 @@
  *
  */
 
-import './ExcalidrawModal.css'
+import './ExcalidrawModal.css';
 
-import Excalidraw from '@excalidraw/excalidraw'
-import * as React from 'react'
-import { ReactPortal, useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
+import Excalidraw from '@excalidraw/excalidraw';
+import * as React from 'react';
+import {ReactPortal, useEffect, useRef, useState} from 'react';
+import {createPortal} from 'react-dom';
 
-import Button from '../../ui/Button'
-import Modal from '../../ui/Modal'
+import Button from '../../ui/Button';
+import Modal from '../../ui/Modal';
 
 export type ExcalidrawElementFragment = {
-  isDeleted?: boolean
-}
+  isDeleted?: boolean;
+};
 
 type Props = {
-  closeOnClickOutside?: boolean
+  closeOnClickOutside?: boolean;
   /**
    * The initial set of elements to draw into the scene
    */
-  initialElements: ReadonlyArray<ExcalidrawElementFragment>
+  initialElements: ReadonlyArray<ExcalidrawElementFragment>;
   /**
    * Controls the visibility of the modal
    */
-  isShown?: boolean
+  isShown?: boolean;
   /**
    * Completely remove Excalidraw component
    */
-  onDelete: () => boolean
+  onDelete: () => boolean;
   /**
    * Handle modal closing
    */
-  onHide: () => void
+  onHide: () => void;
   /**
    * Callback when the save button is clicked
    */
-  onSave: (elements: ReadonlyArray<ExcalidrawElementFragment>) => void
-}
+  onSave: (elements: ReadonlyArray<ExcalidrawElementFragment>) => void;
+};
 
 /**
  * @explorer-desc
@@ -57,126 +57,122 @@ export default function ExcalidrawModal({
   onHide,
   onDelete,
 }: Props): ReactPortal | null {
-  const excalidrawRef = useRef(null)
-  const excaliDrawModelRef = useRef(null)
-  const [discardModalOpen, setDiscardModalOpen] = useState(false)
+  const excalidrawRef = useRef(null);
+  const excaliDrawModelRef = useRef(null);
+  const [discardModalOpen, setDiscardModalOpen] = useState(false);
   const [elements, setElements] =
-    useState<ReadonlyArray<ExcalidrawElementFragment>>(initialElements)
+    useState<ReadonlyArray<ExcalidrawElementFragment>>(initialElements);
 
   useEffect(() => {
     if (excaliDrawModelRef.current !== null) {
-      excaliDrawModelRef.current.focus()
+      excaliDrawModelRef.current.focus();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    let modalOverlayElement = null
+    let modalOverlayElement = null;
     const clickOutsideHandler = (event: MouseEvent) => {
-      const target = event.target
+      const target = event.target;
       if (
         excaliDrawModelRef.current !== null &&
         !excaliDrawModelRef.current.contains(target) &&
         closeOnClickOutside
       ) {
-        onDelete()
+        onDelete();
       }
-    }
+    };
     if (excaliDrawModelRef.current !== null) {
-      modalOverlayElement = excaliDrawModelRef.current?.parentElement
+      modalOverlayElement = excaliDrawModelRef.current?.parentElement;
       if (modalOverlayElement !== null) {
-        modalOverlayElement?.addEventListener('click', clickOutsideHandler)
+        modalOverlayElement?.addEventListener('click', clickOutsideHandler);
       }
     }
 
     return () => {
       if (modalOverlayElement !== null) {
-        modalOverlayElement?.removeEventListener('click', clickOutsideHandler)
+        modalOverlayElement?.removeEventListener('click', clickOutsideHandler);
       }
-    }
-  }, [closeOnClickOutside, onDelete])
+    };
+  }, [closeOnClickOutside, onDelete]);
 
   const save = () => {
     if (elements.filter((el) => !el.isDeleted).length > 0) {
-      onSave(elements)
+      onSave(elements);
     } else {
       // delete node if the scene is clear
-      onDelete()
+      onDelete();
     }
-    onHide()
-  }
+    onHide();
+  };
 
   const discard = () => {
     if (elements.filter((el) => !el.isDeleted).length === 0) {
       // delete node if the scene is clear
-      onDelete()
+      onDelete();
     } else {
       //Otherwise, show confirmation dialog before closing
-      setDiscardModalOpen(true)
+      setDiscardModalOpen(true);
     }
-  }
+  };
 
   function ShowDiscardDialog(): JSX.Element {
     return (
       <Modal
         title="Discard"
         onClose={() => {
-          setDiscardModalOpen(false)
+          setDiscardModalOpen(false);
         }}
-        closeOnClickOutside={true}
-      >
+        closeOnClickOutside={true}>
         Are you sure you want to discard the changes?
         <div className="ExcalidrawModal__discardModal">
           <Button
             onClick={() => {
-              setDiscardModalOpen(false)
-              onHide()
-            }}
-          >
+              setDiscardModalOpen(false);
+              onHide();
+            }}>
             Discard
           </Button>{' '}
           <Button
             onClick={() => {
-              setDiscardModalOpen(false)
-            }}
-          >
+              setDiscardModalOpen(false);
+            }}>
             Cancel
           </Button>
         </div>
       </Modal>
-    )
+    );
   }
 
   useEffect(() => {
-    excalidrawRef?.current?.updateScene({ elements: initialElements })
-  }, [initialElements])
+    excalidrawRef?.current?.updateScene({elements: initialElements});
+  }, [initialElements]);
 
   if (isShown === false) {
-    return null
+    return null;
   }
 
   const onChange = (els) => {
-    setElements(els)
-  }
+    setElements(els);
+  };
 
   // This is a hacky work-around for Excalidraw + Vite.
   // In DEV, Vite pulls this in fine, in prod it doesn't. It seems
   // like a module resolution issue with ESM vs CJS?
   const _Excalidraw =
-    Excalidraw.$$typeof != null ? Excalidraw : Excalidraw.default
+    Excalidraw.$$typeof != null ? Excalidraw : Excalidraw.default;
 
   return createPortal(
     <div className="ExcalidrawModal__overlay" role="dialog">
       <div
         className="ExcalidrawModal__modal"
         ref={excaliDrawModelRef}
-        tabIndex={-1}
-      >
+        tabIndex={-1}>
         <div className="ExcalidrawModal__row">
           {discardModalOpen && <ShowDiscardDialog />}
           <_Excalidraw
             onChange={onChange}
             initialData={{
-              appState: { isLoading: false },
+              appState: {isLoading: false},
               elements: initialElements,
             }}
           />
@@ -191,6 +187,6 @@ export default function ExcalidrawModal({
         </div>
       </div>
     </div>,
-    document.body
-  )
+    document.body,
+  );
 }

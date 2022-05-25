@@ -6,16 +6,16 @@
  *
  */
 
-import './Placeholder.css'
+import './Placeholder.css';
 
-import * as React from 'react'
+import * as React from 'react';
 
 export default function Placeholder({
   children,
   className,
 }: {
-  children: JSX.Element | string | (JSX.Element | string)[]
-  className?: string
+  children: JSX.Element | string | (JSX.Element | string)[];
+  className?: string;
 }): JSX.Element {
-  return <div className={className || 'Placeholder__root'}>{children}</div>
+  return <div className={className || 'Placeholder__root'}>{children}</div>;
 }

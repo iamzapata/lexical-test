@@ -6,17 +6,17 @@
  *
  */
 
-import './EquationEditor.css'
+import './EquationEditor.css';
 
-import * as React from 'react'
-import { ChangeEvent, RefObject } from 'react'
+import * as React from 'react';
+import {ChangeEvent, RefObject} from 'react';
 
 type BaseEquationEditorProps = {
-  equation: string
-  inline: boolean
-  inputRef: { current: null | HTMLInputElement | HTMLTextAreaElement }
-  setEquation: (string) => void
-}
+  equation: string;
+  inline: boolean;
+  inputRef: {current: null | HTMLInputElement | HTMLTextAreaElement};
+  setEquation: (string) => void;
+};
 
 export default function EquationEditor({
   equation,
@@ -25,14 +25,14 @@ export default function EquationEditor({
   inputRef,
 }: BaseEquationEditorProps): JSX.Element {
   const onChange = (event) => {
-    setEquation(event.target.value)
-  }
+    setEquation(event.target.value);
+  };
 
   const props = {
     equation,
     inputRef,
     onChange,
-  }
+  };
 
   return inline ? (
     <InlineEquationEditor
@@ -44,14 +44,14 @@ export default function EquationEditor({
       {...props}
       inputRef={inputRef as RefObject<HTMLTextAreaElement>}
     />
-  )
+  );
 }
 
 type EquationEditorImplProps = {
-  equation: string
-  inputRef: { current: null | HTMLInputElement }
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
-}
+  equation: string;
+  inputRef: {current: null | HTMLInputElement};
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+};
 
 function InlineEquationEditor({
   equation,
@@ -70,14 +70,14 @@ function InlineEquationEditor({
       />
       <span className="EquationEditor_dollarSign">$</span>
     </span>
-  )
+  );
 }
 
 type BlockEquationEditorImplProps = {
-  equation: string
-  inputRef: { current: null | HTMLTextAreaElement }
-  onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void
-}
+  equation: string;
+  inputRef: {current: null | HTMLTextAreaElement};
+  onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+};
 
 function BlockEquationEditor({
   equation,
@@ -95,5 +95,5 @@ function BlockEquationEditor({
       />
       <span className="EquationEditor_dollarSign">{'\n$$'}</span>
     </div>
-  )
+  );
 }

@@ -6,23 +6,23 @@
  *
  */
 
-import type { ElementFormatType, LexicalNode, NodeKey } from 'lexical'
+import type {ElementFormatType, LexicalNode, NodeKey} from 'lexical';
 
-import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents'
+import {BlockWithAlignableContents} from '@lexical/react/LexicalBlockWithAlignableContents';
 import {
   DecoratorBlockNode,
   SerializedDecoratorBlockNode,
-} from '@lexical/react/LexicalDecoratorBlockNode'
-import { Spread } from 'globals'
-import * as React from 'react'
+} from '@lexical/react/LexicalDecoratorBlockNode';
+import {Spread} from 'globals';
+import * as React from 'react';
 
 type YouTubeComponentProps = Readonly<{
-  format: ElementFormatType | null
-  nodeKey: NodeKey
-  videoID: string
-}>
+  format: ElementFormatType | null;
+  nodeKey: NodeKey;
+  videoID: string;
+}>;
 
-function YouTubeComponent({ format, nodeKey, videoID }: YouTubeComponentProps) {
+function YouTubeComponent({format, nodeKey, videoID}: YouTubeComponentProps) {
   return (
     <BlockWithAlignableContents format={format} nodeKey={nodeKey}>
       <iframe
@@ -35,33 +35,33 @@ function YouTubeComponent({ format, nodeKey, videoID }: YouTubeComponentProps) {
         title="YouTube video"
       />
     </BlockWithAlignableContents>
-  )
+  );
 }
 
 export type SerializedYouTubeNode = Spread<
   {
-    videoID: string
-    type: 'youtube'
-    version: 1
+    videoID: string;
+    type: 'youtube';
+    version: 1;
   },
   SerializedDecoratorBlockNode
->
+>;
 
 export class YouTubeNode extends DecoratorBlockNode<JSX.Element> {
-  __id: string
+  __id: string;
 
   static getType(): string {
-    return 'youtube'
+    return 'youtube';
   }
 
   static clone(node: YouTubeNode): YouTubeNode {
-    return new YouTubeNode(node.__id, node.__format, node.__key)
+    return new YouTubeNode(node.__id, node.__format, node.__key);
   }
 
   static importJSON(serializedNode: SerializedYouTubeNode): YouTubeNode {
-    const node = $createYouTubeNode(serializedNode.videoID)
-    node.setFormat(serializedNode.format)
-    return node
+    const node = $createYouTubeNode(serializedNode.videoID);
+    node.setFormat(serializedNode.format);
+    return node;
   }
 
   exportJSON(): SerializedYouTubeNode {
@@ -70,16 +70,16 @@ export class YouTubeNode extends DecoratorBlockNode<JSX.Element> {
       type: 'youtube',
       version: 1,
       videoID: this.__id,
-    }
+    };
   }
 
   constructor(id: string, format?: ElementFormatType | null, key?: NodeKey) {
-    super(format, key)
-    this.__id = id
+    super(format, key);
+    this.__id = id;
   }
 
   updateDOM(): false {
-    return false
+    return false;
   }
 
   decorate(): JSX.Element {
@@ -89,20 +89,20 @@ export class YouTubeNode extends DecoratorBlockNode<JSX.Element> {
         nodeKey={this.getKey()}
         videoID={this.__id}
       />
-    )
+    );
   }
 
   isTopLevel(): true {
-    return true
+    return true;
   }
 }
 
 export function $createYouTubeNode(videoID: string): YouTubeNode {
-  return new YouTubeNode(videoID)
+  return new YouTubeNode(videoID);
 }
 
 export function $isYouTubeNode(
-  node: YouTubeNode | LexicalNode | null | undefined
+  node: YouTubeNode | LexicalNode | null | undefined,
 ): node is YouTubeNode {
-  return node instanceof YouTubeNode
+  return node instanceof YouTubeNode;
 }

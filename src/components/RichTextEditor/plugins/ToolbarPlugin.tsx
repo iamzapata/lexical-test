@@ -57,10 +57,9 @@ import {
   TextNode,
   UNDO_COMMAND,
 } from 'lexical'
-import * as React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { IS_APPLE } from '../shared/environment'
+import { IS_APPLE } from '@utils/environment'
 
 import useModal from '../hooks/useModal'
 import catTypingGif from '../images/cat-typing.gif'

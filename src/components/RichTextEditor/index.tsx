@@ -9,8 +9,6 @@
 import './setupEnv'
 import './index.css'
 
-import { PlaygroundApp } from './App'
-
 // Handle runtime errors
 const showErrorOverlay = (err) => {
   const ErrorOverlay = customElements.get('vite-error-overlay')
@@ -28,5 +26,3 @@ window.addEventListener('error', showErrorOverlay)
 window.addEventListener('unhandledrejection', ({ reason }) =>
   showErrorOverlay(reason)
 )
-
-export { PlaygroundApp }

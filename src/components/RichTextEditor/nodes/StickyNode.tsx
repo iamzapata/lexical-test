@@ -33,7 +33,7 @@ import {
 } from 'lexical'
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useLayoutEffect } from 'react'
+import useLayoutEffect from '@utils/useLayoutEffect'
 
 import { createWebsocketProvider } from '../collaboration'
 import { useSharedHistoryContext } from '../context/SharedHistoryContext'
