@@ -12,7 +12,7 @@ import {
   moveToLineBeginning,
   moveToLineEnd,
   selectAll,
-} from '../keyboardShortcuts/index.mjs';
+} from '../keyboardShortcuts/index.mjs'
 import {
   assertHTML,
   click,
@@ -21,17 +21,20 @@ import {
   initialize,
   pasteFromClipboard,
   test,
-} from '../utils/index.mjs';
+} from '../utils/index.mjs'
 
 test.describe('Auto Links', () => {
-  test.beforeEach(({isCollab, page}) => initialize({isCollab, page}));
+  test.beforeEach(({ isCollab, page }) => initialize({ isCollab, page }))
 
-  test('Can convert url-like text into links', async ({page, isPlainText}) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
+  test('Can convert url-like text into links', async ({
+    page,
+    isPlainText,
+  }) => {
+    test.skip(isPlainText)
+    await focusEditor(page)
     await page.keyboard.type(
-      'Hello http://example.com and https://example.com/path?with=query#and-hash and www.example.com',
-    );
+      'Hello http://example.com and https://example.com/path?with=query#and-hash and www.example.com'
+    )
     await assertHTML(
       page,
       html`
@@ -52,29 +55,29 @@ test.describe('Auto Links', () => {
           </a>
         </p>
       `,
-      {ignoreClasses: true},
-    );
-  });
+      { ignoreClasses: true }
+    )
+  })
 
   test('Can destruct links if add non-spacing text in front or right after it', async ({
     page,
     isPlainText,
   }) => {
-    test.skip(isPlainText);
+    test.skip(isPlainText)
     const htmlWithLink = html`
       <p dir="ltr">
         <a href="http://example.com" dir="ltr">
           <span data-lexical-text="true">http://example.com</span>
         </a>
       </p>
-    `;
+    `
 
-    await focusEditor(page);
-    await page.keyboard.type('http://example.com');
-    await assertHTML(page, htmlWithLink, {ignoreClasses: true});
+    await focusEditor(page)
+    await page.keyboard.type('http://example.com')
+    await assertHTML(page, htmlWithLink, { ignoreClasses: true })
 
     // Add non-url text after the link
-    await page.keyboard.type('!');
+    await page.keyboard.type('!')
     await assertHTML(
       page,
       html`
@@ -82,14 +85,14 @@ test.describe('Auto Links', () => {
           <span data-lexical-text="true">http://example.com!</span>
         </p>
       `,
-      {ignoreClasses: true},
-    );
-    await page.keyboard.press('Backspace');
-    await assertHTML(page, htmlWithLink, {ignoreClasses: true});
+      { ignoreClasses: true }
+    )
+    await page.keyboard.press('Backspace')
+    await assertHTML(page, htmlWithLink, { ignoreClasses: true })
 
     // Add non-url text before the link
-    await moveToLineBeginning(page);
-    await page.keyboard.type('!');
+    await moveToLineBeginning(page)
+    await page.keyboard.type('!')
     await assertHTML(
       page,
       html`
@@ -97,36 +100,31 @@ test.describe('Auto Links', () => {
           <span data-lexical-text="true">!http://example.com</span>
         </p>
       `,
-      {ignoreClasses: true},
-    );
-    await page.keyboard.press('Backspace');
-    await assertHTML(page, htmlWithLink, {ignoreClasses: true});
+      { ignoreClasses: true }
+    )
+    await page.keyboard.press('Backspace')
+    await assertHTML(page, htmlWithLink, { ignoreClasses: true })
 
     // Add newline after link
-    await moveToLineEnd(page);
-    await page.keyboard.press('Enter');
-    await assertHTML(
-      page,
-      htmlWithLink +
-        html`
-          <p><br /></p>
-        `,
-      {ignoreClasses: true},
-    );
-    await page.keyboard.press('Backspace');
-    await assertHTML(page, htmlWithLink, {ignoreClasses: true});
-  });
+    await moveToLineEnd(page)
+    await page.keyboard.press('Enter')
+    await assertHTML(page, htmlWithLink + html` <p><br /></p> `, {
+      ignoreClasses: true,
+    })
+    await page.keyboard.press('Backspace')
+    await assertHTML(page, htmlWithLink, { ignoreClasses: true })
+  })
 
   test('Can create link when pasting text with urls', async ({
     page,
     isPlainText,
   }) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
+    test.skip(isPlainText)
+    await focusEditor(page)
     await pasteFromClipboard(page, {
       'text/plain':
         'Hello http://example.com and https://example.com/path?with=query#and-hash and www.example.com',
-    });
+    })
     await assertHTML(
       page,
       html`
@@ -147,17 +145,17 @@ test.describe('Auto Links', () => {
           </a>
         </p>
       `,
-      {ignoreClasses: true},
-    );
-  });
+      { ignoreClasses: true }
+    )
+  })
 
-  test('Does not create redundant auto-link', async ({page, isPlainText}) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
-    await page.keyboard.type('hm');
+  test('Does not create redundant auto-link', async ({ page, isPlainText }) => {
+    test.skip(isPlainText)
+    await focusEditor(page)
+    await page.keyboard.type('hm')
 
-    await selectAll(page);
-    await click(page, '.link');
+    await selectAll(page)
+    await click(page, '.link')
 
     await assertHTML(
       page,
@@ -168,11 +166,11 @@ test.describe('Auto Links', () => {
           </a>
         </p>
       `,
-      {ignoreClasses: true},
-    );
-    await moveLeft(page, 1);
-    await moveRight(page, 1);
-    await page.keyboard.type('ttps://facebook.co');
+      { ignoreClasses: true }
+    )
+    await moveLeft(page, 1)
+    await moveRight(page, 1)
+    await page.keyboard.type('ttps://facebook.co')
     await assertHTML(
       page,
       html`
@@ -182,17 +180,17 @@ test.describe('Auto Links', () => {
           </a>
         </p>
       `,
-      {ignoreClasses: true},
-    );
-  });
+      { ignoreClasses: true }
+    )
+  })
 
-  test('Handles multiple autolinks in a row', async ({page, isPlainText}) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
+  test('Handles multiple autolinks in a row', async ({ page, isPlainText }) => {
+    test.skip(isPlainText)
+    await focusEditor(page)
     await pasteFromClipboard(page, {
       'text/plain':
         'https://1.com/ https://2.com/ https://3.com/ https://4.com/',
-    });
+    })
     await assertHTML(
       page,
       html`
@@ -214,7 +212,7 @@ test.describe('Auto Links', () => {
           </a>
         </p>
       `,
-      {ignoreClasses: true},
-    );
-  });
-});
+      { ignoreClasses: true }
+    )
+  })
+})

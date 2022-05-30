@@ -6,7 +6,10 @@
  *
  */
 
-import {moveToEditorBeginning, selectAll} from '../keyboardShortcuts/index.mjs';
+import {
+  moveToEditorBeginning,
+  selectAll,
+} from '../keyboardShortcuts/index.mjs'
 import {
   assertHTML,
   assertSelection,
@@ -17,25 +20,25 @@ import {
   pasteFromClipboard,
   selectOption,
   test,
-} from '../utils/index.mjs';
+} from '../utils/index.mjs'
 
 async function toggleCodeBlock(page) {
-  await click(page, '.block-controls');
-  await click(page, '.dropdown .icon.code');
+  await click(page, '.block-controls')
+  await click(page, '.dropdown .icon.code')
 }
 
 test.describe('CodeBlock', () => {
-  test.beforeEach(({isCollab, page}) => initialize({isCollab, page}));
-  test('Can create code block with markdown', async ({page, isRichText}) => {
-    await focusEditor(page);
-    await page.keyboard.type('``` alert(1);');
+  test.beforeEach(({ isCollab, page }) => initialize({ isCollab, page }))
+  test('Can create code block with markdown', async ({ page, isRichText }) => {
+    await focusEditor(page)
+    await page.keyboard.type('``` alert(1);')
     if (isRichText) {
       await assertSelection(page, {
         anchorOffset: 1,
         anchorPath: [0, 4, 0],
         focusOffset: 1,
         focusPath: [0, 4, 0],
-      });
+      })
       await assertHTML(
         page,
         html`
@@ -44,78 +47,86 @@ test.describe('CodeBlock', () => {
             spellcheck="false"
             dir="ltr"
             data-gutter="1"
-            data-highlight-language="javascript">
+            data-highlight-language="javascript"
+          >
             <span
               class="PlaygroundEditorTheme__tokenFunction"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               alert
             </span>
             <span
               class="PlaygroundEditorTheme__tokenPunctuation"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               (
             </span>
             <span
               class="PlaygroundEditorTheme__tokenProperty"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               1
             </span>
             <span
               class="PlaygroundEditorTheme__tokenPunctuation"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               )
             </span>
             <span
               class="PlaygroundEditorTheme__tokenPunctuation"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               ;
             </span>
           </code>
-        `,
-      );
+        `
+      )
 
       // Remove code block (back to a normal paragraph) and check that highlights are converted into regular text
-      await moveToEditorBeginning(page);
-      await page.keyboard.press('Backspace');
+      await moveToEditorBeginning(page)
+      await page.keyboard.press('Backspace')
       await assertHTML(
         page,
         html`
           <p
             class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-            dir="ltr">
+            dir="ltr"
+          >
             <span data-lexical-text="true">alert(1);</span>
           </p>
-        `,
-      );
+        `
+      )
     } else {
       await assertHTML(
         page,
         html`
           <p
             class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-            dir="ltr">
+            dir="ltr"
+          >
             <span data-lexical-text="true">\`\`\` alert(1);</span>
           </p>
-        `,
-      );
+        `
+      )
     }
-  });
+  })
 
   test('Can create code block with markdown and wrap existing text', async ({
     page,
     isRichText,
   }) => {
-    await focusEditor(page);
-    await page.keyboard.type('alert(1);');
-    await moveToEditorBeginning(page);
-    await page.keyboard.type('``` ');
+    await focusEditor(page)
+    await page.keyboard.type('alert(1);')
+    await moveToEditorBeginning(page)
+    await page.keyboard.type('``` ')
     if (isRichText) {
       await assertSelection(page, {
         anchorOffset: 0,
         anchorPath: [0, 0, 0],
         focusOffset: 0,
         focusPath: [0, 0, 0],
-      });
+      })
       await assertHTML(
         page,
         html`
@@ -124,94 +135,105 @@ test.describe('CodeBlock', () => {
             spellcheck="false"
             dir="ltr"
             data-gutter="1"
-            data-highlight-language="javascript">
+            data-highlight-language="javascript"
+          >
             <span
               class="PlaygroundEditorTheme__tokenFunction"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               alert
             </span>
             <span
               class="PlaygroundEditorTheme__tokenPunctuation"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               (
             </span>
             <span
               class="PlaygroundEditorTheme__tokenProperty"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               1
             </span>
             <span
               class="PlaygroundEditorTheme__tokenPunctuation"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               )
             </span>
             <span
               class="PlaygroundEditorTheme__tokenPunctuation"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               ;
             </span>
           </code>
-        `,
-      );
+        `
+      )
     } else {
       await assertHTML(
         page,
         html`
           <p
             class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-            dir="ltr">
+            dir="ltr"
+          >
             <span data-lexical-text="true">\`\`\` alert(1);</span>
           </p>
-        `,
-      );
+        `
+      )
     }
-  });
+  })
 
   test('Can select multiple paragraphs and convert to code block', async ({
     page,
     isPlainText,
   }) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
-    await page.keyboard.type('foo');
-    await page.keyboard.press('Enter');
-    await page.keyboard.type('bar');
-    await page.keyboard.press('Enter');
-    await page.keyboard.type('yar');
-    await page.keyboard.press('Enter');
-    await page.keyboard.press('Enter');
-    await page.keyboard.type('meh');
+    test.skip(isPlainText)
+    await focusEditor(page)
+    await page.keyboard.type('foo')
+    await page.keyboard.press('Enter')
+    await page.keyboard.type('bar')
+    await page.keyboard.press('Enter')
+    await page.keyboard.type('yar')
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Enter')
+    await page.keyboard.type('meh')
 
-    await selectAll(page);
+    await selectAll(page)
 
     await assertHTML(
       page,
       html`
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">foo</span>
         </p>
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">bar</span>
         </p>
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">yar</span>
         </p>
         <p class="PlaygroundEditorTheme__paragraph"><br /></p>
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">meh</span>
         </p>
-      `,
-    );
+      `
+    )
 
-    await toggleCodeBlock(page);
+    await toggleCodeBlock(page)
 
     await assertHTML(
       page,
@@ -221,7 +243,8 @@ test.describe('CodeBlock', () => {
           dir="ltr"
           spellcheck="false"
           data-gutter="12345"
-          data-highlight-language="javascript">
+          data-highlight-language="javascript"
+        >
           <span data-lexical-text="true">foo</span>
           <br />
           <span data-lexical-text="true">bar</span>
@@ -231,16 +254,16 @@ test.describe('CodeBlock', () => {
           <br />
           <span data-lexical-text="true">meh</span>
         </code>
-      `,
-    );
-  });
+      `
+    )
+  })
 
   test('Can switch highlighting language in a toolbar', async ({
     page,
     isRichText,
   }) => {
-    await focusEditor(page);
-    await page.keyboard.type('``` select * from users');
+    await focusEditor(page)
+    await page.keyboard.type('``` select * from users')
     if (isRichText) {
       await assertHTML(
         page,
@@ -250,18 +273,20 @@ test.describe('CodeBlock', () => {
             spellcheck="false"
             dir="ltr"
             data-gutter="1"
-            data-highlight-language="javascript">
+            data-highlight-language="javascript"
+          >
             <span data-lexical-text="true">select</span>
             <span
               class="PlaygroundEditorTheme__tokenOperator"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               *
             </span>
             <span data-lexical-text="true">from users</span>
           </code>
-        `,
-      );
-      await selectOption(page, '.code-language', {value: 'sql'});
+        `
+      )
+      await selectOption(page, '.code-language', { value: 'sql' })
       await assertHTML(
         page,
         html`
@@ -270,54 +295,59 @@ test.describe('CodeBlock', () => {
             spellcheck="false"
             dir="ltr"
             data-gutter="1"
-            data-highlight-language="sql">
+            data-highlight-language="sql"
+          >
             <span
               class="PlaygroundEditorTheme__tokenAttr"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               select
             </span>
             <span data-lexical-text="true"></span>
             <span
               class="PlaygroundEditorTheme__tokenOperator"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               *
             </span>
             <span data-lexical-text="true"></span>
             <span
               class="PlaygroundEditorTheme__tokenAttr"
-              data-lexical-text="true">
+              data-lexical-text="true"
+            >
               from
             </span>
             <span data-lexical-text="true">users</span>
           </code>
-        `,
-      );
+        `
+      )
     } else {
       await assertHTML(
         page,
         html`
           <p
             class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-            dir="ltr">
+            dir="ltr"
+          >
             <span data-lexical-text="true">\`\`\` select * from users</span>
           </p>
-        `,
-      );
+        `
+      )
     }
-  });
+  })
 
   test('Can maintain indent when creating new lines', async ({
     page,
     isRichText,
     isPlainText,
   }) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
-    await page.keyboard.type('``` alert(1);');
-    await page.keyboard.press('Enter');
-    await page.keyboard.press('Tab');
-    await page.keyboard.type('alert(2);');
-    await page.keyboard.press('Enter');
+    test.skip(isPlainText)
+    await focusEditor(page)
+    await page.keyboard.type('``` alert(1);')
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Tab')
+    await page.keyboard.type('alert(2);')
+    await page.keyboard.press('Enter')
     await assertHTML(
       page,
       html`
@@ -326,80 +356,91 @@ test.describe('CodeBlock', () => {
           spellcheck="false"
           dir="ltr"
           data-gutter="123"
-          data-highlight-language="javascript">
+          data-highlight-language="javascript"
+        >
           <span
             class="PlaygroundEditorTheme__tokenFunction"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             alert
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span
             class="PlaygroundEditorTheme__tokenProperty"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             1
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             ;
           </span>
           <br />
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenFunction"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             alert
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span
             class="PlaygroundEditorTheme__tokenProperty"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             2
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             ;
           </span>
           <br />
           <span data-lexical-text="true"></span>
         </code>
-      `,
-    );
-  });
+      `
+    )
+  })
 
   test('Can (un)indent multiple lines at once', async ({
     page,
     isRichText,
     isPlainText,
   }) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
-    await page.keyboard.type('``` if (x) {');
-    await page.keyboard.press('Enter');
-    await page.keyboard.press('Tab');
-    await page.keyboard.type('x();');
-    await page.keyboard.press('Enter');
-    await page.keyboard.press('Backspace');
-    await page.keyboard.type('}');
+    test.skip(isPlainText)
+    await focusEditor(page)
+    await page.keyboard.type('``` if (x) {')
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Tab')
+    await page.keyboard.type('x();')
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Backspace')
+    await page.keyboard.type('}')
     await assertHTML(
       page,
       html`
@@ -408,67 +449,77 @@ test.describe('CodeBlock', () => {
           spellcheck="false"
           dir="ltr"
           data-gutter="123"
-          data-highlight-language="javascript">
+          data-highlight-language="javascript"
+        >
           <span
             class="PlaygroundEditorTheme__tokenAttr"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             if
           </span>
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span data-lexical-text="true">x</span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             {
           </span>
           <br />
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenFunction"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             x
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             ;
           </span>
           <br />
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             }
           </span>
         </code>
-      `,
-    );
-    await page.keyboard.down('Shift');
-    await page.keyboard.press('ArrowUp');
-    await page.keyboard.press('ArrowUp');
-    await page.keyboard.up('Shift');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
+      `
+    )
+    await page.keyboard.down('Shift')
+    await page.keyboard.press('ArrowUp')
+    await page.keyboard.press('ArrowUp')
+    await page.keyboard.up('Shift')
+    await page.keyboard.press('Tab')
+    await page.keyboard.press('Tab')
     await assertHTML(
       page,
       html`
@@ -477,66 +528,76 @@ test.describe('CodeBlock', () => {
           spellcheck="false"
           dir="ltr"
           data-gutter="123"
-          data-highlight-language="javascript">
+          data-highlight-language="javascript"
+        >
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenAttr"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             if
           </span>
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span data-lexical-text="true">x</span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             {
           </span>
           <br />
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenFunction"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             x
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             ;
           </span>
           <br />
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             }
           </span>
         </code>
-      `,
-    );
-    await page.keyboard.down('Shift');
-    await page.keyboard.press('Tab');
-    await page.keyboard.up('Shift');
+      `
+    )
+    await page.keyboard.down('Shift')
+    await page.keyboard.press('Tab')
+    await page.keyboard.up('Shift')
     await assertHTML(
       page,
       html`
@@ -545,67 +606,77 @@ test.describe('CodeBlock', () => {
           spellcheck="false"
           dir="ltr"
           data-gutter="123"
-          data-highlight-language="javascript">
+          data-highlight-language="javascript"
+        >
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenAttr"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             if
           </span>
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span data-lexical-text="true">x</span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             {
           </span>
           <br />
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenFunction"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             x
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             ;
           </span>
           <br />
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             }
           </span>
         </code>
-      `,
-    );
-    await page.keyboard.down('Shift');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.up('Shift');
+      `
+    )
+    await page.keyboard.down('Shift')
+    await page.keyboard.press('Tab')
+    await page.keyboard.press('Tab')
+    await page.keyboard.up('Shift')
     await assertHTML(
       page,
       html`
@@ -614,246 +685,282 @@ test.describe('CodeBlock', () => {
           spellcheck="false"
           dir="ltr"
           data-gutter="123"
-          data-highlight-language="javascript">
+          data-highlight-language="javascript"
+        >
           <span
             class="PlaygroundEditorTheme__tokenAttr"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             if
           </span>
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span data-lexical-text="true">x</span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span data-lexical-text="true"></span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             {
           </span>
           <br />
           <span
             class="PlaygroundEditorTheme__tokenFunction"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             x
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             (
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             )
           </span>
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             ;
           </span>
           <br />
           <span
             class="PlaygroundEditorTheme__tokenPunctuation"
-            data-lexical-text="true">
+            data-lexical-text="true"
+          >
             }
           </span>
         </code>
-      `,
-    );
-  });
+      `
+    )
+  })
 
   test('Can move around lines with option+arrow keys', async ({
     page,
     isPlainText,
   }) => {
-    test.skip(isPlainText);
+    test.skip(isPlainText)
     const abcHTML = html`
       <code
         class="PlaygroundEditorTheme__code PlaygroundEditorTheme__ltr"
         spellcheck="false"
         dir="ltr"
         data-gutter="123"
-        data-highlight-language="javascript">
+        data-highlight-language="javascript"
+      >
         <span
           class="PlaygroundEditorTheme__tokenFunction"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           a
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           (
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           )
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           ;
         </span>
         <br />
         <span
           class="PlaygroundEditorTheme__tokenFunction"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           b
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           (
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           )
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           ;
         </span>
         <br />
         <span
           class="PlaygroundEditorTheme__tokenFunction"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           c
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           (
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           )
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           ;
         </span>
       </code>
-    `;
+    `
     const bcaHTML = html`
       <code
         class="PlaygroundEditorTheme__code PlaygroundEditorTheme__ltr"
         spellcheck="false"
         dir="ltr"
         data-gutter="123"
-        data-highlight-language="javascript">
+        data-highlight-language="javascript"
+      >
         <span
           class="PlaygroundEditorTheme__tokenFunction"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           b
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           (
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           )
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           ;
         </span>
         <br />
         <span
           class="PlaygroundEditorTheme__tokenFunction"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           c
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           (
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           )
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           ;
         </span>
         <br />
         <span
           class="PlaygroundEditorTheme__tokenFunction"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           a
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           (
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           )
         </span>
         <span
           class="PlaygroundEditorTheme__tokenPunctuation"
-          data-lexical-text="true">
+          data-lexical-text="true"
+        >
           ;
         </span>
       </code>
-    `;
+    `
     const endOfFirstLine = {
       anchorOffset: 1,
       anchorPath: [0, 3, 0],
       focusOffset: 1,
       focusPath: [0, 3, 0],
-    };
+    }
     const endOfLastLine = {
       anchorOffset: 1,
       anchorPath: [0, 13, 0],
       focusOffset: 1,
       focusPath: [0, 13, 0],
-    };
-    await focusEditor(page);
-    await page.keyboard.type('``` a();\nb();\nc();');
-    await assertHTML(page, abcHTML);
-    await assertSelection(page, endOfLastLine);
-    await page.keyboard.press('ArrowUp');
-    await page.keyboard.press('ArrowUp');
+    }
+    await focusEditor(page)
+    await page.keyboard.type('``` a();\nb();\nc();')
+    await assertHTML(page, abcHTML)
+    await assertSelection(page, endOfLastLine)
+    await page.keyboard.press('ArrowUp')
+    await page.keyboard.press('ArrowUp')
     // Workaround for #1173: just insert and remove a space to fix Firefox losing the selection
-    await page.keyboard.type(' ');
-    await page.keyboard.press('Backspace');
-    await assertSelection(page, endOfFirstLine);
+    await page.keyboard.type(' ')
+    await page.keyboard.press('Backspace')
+    await assertSelection(page, endOfFirstLine)
     // End workaround
     // Ensure attempting to move a line up at the top of a codeblock no-ops
-    await page.keyboard.down('Alt');
-    await page.keyboard.press('ArrowUp');
-    await assertSelection(page, endOfFirstLine);
-    await assertHTML(page, abcHTML);
-    await page.keyboard.press('ArrowDown');
-    await page.keyboard.press('ArrowDown');
-    await assertSelection(page, endOfLastLine);
+    await page.keyboard.down('Alt')
+    await page.keyboard.press('ArrowUp')
+    await assertSelection(page, endOfFirstLine)
+    await assertHTML(page, abcHTML)
+    await page.keyboard.press('ArrowDown')
+    await page.keyboard.press('ArrowDown')
+    await assertSelection(page, endOfLastLine)
     // Can't move a line down and out of codeblock
-    await assertHTML(page, bcaHTML);
-    await page.keyboard.press('ArrowDown');
-    await assertSelection(page, endOfLastLine);
-    await assertHTML(page, bcaHTML);
-  });
+    await assertHTML(page, bcaHTML)
+    await page.keyboard.press('ArrowDown')
+    await assertSelection(page, endOfLastLine)
+    await assertHTML(page, bcaHTML)
+  })
 
   /**
    * Code example for tests:
@@ -869,30 +976,35 @@ test.describe('CodeBlock', () => {
       spellcheck="false"
       dir="ltr"
       data-gutter="123"
-      data-highlight-language="javascript">
+      data-highlight-language="javascript"
+    >
       <span class="PlaygroundEditorTheme__tokenAttr" data-lexical-text="true">
         function
       </span>
       <span data-lexical-text="true"></span>
       <span
         class="PlaygroundEditorTheme__tokenFunction"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         run
       </span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         (
       </span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         )
       </span>
       <span data-lexical-text="true"></span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         {
       </span>
       <br />
@@ -903,7 +1015,8 @@ test.describe('CodeBlock', () => {
       <span data-lexical-text="true"></span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         [
       </span>
       <span class="PlaygroundEditorTheme__tokenAttr" data-lexical-text="true">
@@ -911,7 +1024,8 @@ test.describe('CodeBlock', () => {
       </span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         ,
       </span>
       <span data-lexical-text="true"></span>
@@ -920,44 +1034,51 @@ test.describe('CodeBlock', () => {
       </span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         ,
       </span>
       <span data-lexical-text="true"></span>
       <span
         class="PlaygroundEditorTheme__tokenProperty"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         2
       </span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         ,
       </span>
       <span data-lexical-text="true"></span>
       <span
         class="PlaygroundEditorTheme__tokenSelector"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         ""
       </span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         ]
       </span>
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         ;
       </span>
       <br />
       <span
         class="PlaygroundEditorTheme__tokenPunctuation"
-        data-lexical-text="true">
+        data-lexical-text="true"
+      >
         }
       </span>
     </code>
-  `;
+  `
   const CODE_PASTING_TESTS = [
     {
       expectedHTML: EXPECTED_HTML,
@@ -994,20 +1115,20 @@ test.describe('CodeBlock', () => {
       name: 'GitHub / Gist',
       pastedHTML: `<meta charset='utf-8'><table class="highlight tab-size js-file-line-container js-code-nav-container js-tagsearch-file" data-tab-size="8" data-paste-markdown-skip="" data-tagsearch-lang="JavaScript" data-tagsearch-path="example.js" style="box-sizing: border-box; border-spacing: 0px; border-collapse: collapse; tab-size: 8; color: rgb(36, 41, 47); font-family: -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Helvetica, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><tbody style="box-sizing: border-box;"><tr style="box-sizing: border-box;"><td id="file-example-js-LC1" class="blob-code blob-code-inner js-file-line" style="box-sizing: border-box; padding: 0px 10px; position: relative; line-height: 20px; vertical-align: top; overflow: visible; font-family: ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;, monospace; font-size: 12px; color: var(--color-fg-default); overflow-wrap: normal; white-space: pre;"><span class="pl-k" style="box-sizing: border-box; color: var(--color-prettylights-syntax-keyword);">function</span> <span class="pl-en" style="box-sizing: border-box; color: var(--color-prettylights-syntax-entity);">run</span><span class="pl-kos" style="box-sizing: border-box;">(</span><span class="pl-kos" style="box-sizing: border-box;">)</span> <span class="pl-kos" style="box-sizing: border-box;">{</span></td></tr><tr style="box-sizing: border-box; background-color: transparent;"><td id="file-example-js-L2" class="blob-num js-line-number js-code-nav-line-number" data-line-number="2" style="box-sizing: border-box; padding: 0px 10px; width: 50px; min-width: 50px; font-family: ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;, monospace; font-size: 12px; line-height: 20px; color: var(--color-fg-subtle); text-align: right; white-space: nowrap; vertical-align: top; cursor: pointer; user-select: none;"></td><td id="file-example-js-LC2" class="blob-code blob-code-inner js-file-line" style="box-sizing: border-box; padding: 0px 10px; position: relative; line-height: 20px; vertical-align: top; overflow: visible; font-family: ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;, monospace; font-size: 12px; color: var(--color-fg-default); overflow-wrap: normal; white-space: pre;">  <span class="pl-k" style="box-sizing: border-box; color: var(--color-prettylights-syntax-keyword);">return</span> <span class="pl-kos" style="box-sizing: border-box;">[</span><span class="pl-c1" style="box-sizing: border-box; color: var(--color-prettylights-syntax-constant);">null</span><span class="pl-kos" style="box-sizing: border-box;">,</span> <span class="pl-c1" style="box-sizing: border-box; color: var(--color-prettylights-syntax-constant);">undefined</span><span class="pl-kos" style="box-sizing: border-box;">,</span> <span class="pl-c1" style="box-sizing: border-box; color: var(--color-prettylights-syntax-constant);">2</span><span class="pl-kos" style="box-sizing: border-box;">,</span> <span class="pl-s" style="box-sizing: border-box; color: var(--color-prettylights-syntax-string);">""</span><span class="pl-kos" style="box-sizing: border-box;">]</span><span class="pl-kos" style="box-sizing: border-box;">;</span></td></tr><tr style="box-sizing: border-box;"><td id="file-example-js-L3" class="blob-num js-line-number js-code-nav-line-number" data-line-number="3" style="box-sizing: border-box; padding: 0px 10px; width: 50px; min-width: 50px; font-family: ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;, monospace; font-size: 12px; line-height: 20px; color: var(--color-fg-subtle); text-align: right; white-space: nowrap; vertical-align: top; cursor: pointer; user-select: none;"></td><td id="file-example-js-LC3" class="blob-code blob-code-inner js-file-line" style="box-sizing: border-box; padding: 0px 10px; position: relative; line-height: 20px; vertical-align: top; overflow: visible; font-family: ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;, monospace; font-size: 12px; color: var(--color-fg-default); overflow-wrap: normal; white-space: pre;"><span class="pl-kos" style="box-sizing: border-box;">}</span></td></tr></tbody></table>`,
     },
-  ];
+  ]
 
   CODE_PASTING_TESTS.forEach((testCase, i) => {
     test(`Code block html paste: ${testCase.name}`, async ({
       page,
       isPlainText,
     }) => {
-      test.skip(isPlainText);
+      test.skip(isPlainText)
 
-      await focusEditor(page);
+      await focusEditor(page)
       await pasteFromClipboard(page, {
         'text/html': testCase.pastedHTML,
-      });
-      await assertHTML(page, testCase.expectedHTML);
-    });
-  });
-});
+      })
+      await assertHTML(page, testCase.expectedHTML)
+    })
+  })
+})

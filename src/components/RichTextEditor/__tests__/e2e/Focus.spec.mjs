@@ -13,35 +13,35 @@ import {
   focusEditor,
   initialize,
   test,
-} from '../utils/index.mjs';
+} from '../utils/index.mjs'
 
 test.describe('Focus', () => {
-  test.beforeEach(({isCollab, page}) => initialize({isCollab, page}));
-  test(`can tab out of the editor`, async ({page, isRichText}) => {
-    test.skip(isRichText);
-    await focusEditor(page);
-    await page.keyboard.press('Tab');
+  test.beforeEach(({ isCollab, page }) => initialize({ isCollab, page }))
+  test(`can tab out of the editor`, async ({ page, isRichText }) => {
+    test.skip(isRichText)
+    await focusEditor(page)
+    await page.keyboard.press('Tab')
     const isEditorFocused = await page.evaluate(() => {
-      const editor = document.querySelector('div[contenteditable="true"]');
-      return editor === document.activeElement;
-    });
+      const editor = document.querySelector('div[contenteditable="true"]')
+      return editor === document.activeElement
+    })
 
-    expect(isEditorFocused).toBe(false);
-  });
+    expect(isEditorFocused).toBe(false)
+  })
 
   test(`selection remains internally when clicking outside the editor`, async ({
     page,
     isCollab,
   }) => {
-    test.skip(isCollab);
+    test.skip(isCollab)
     const getInternalSelection = async () =>
       await evaluate(page, () => {
         return document
           .querySelector(`div[contenteditable="true"]`)
-          .__lexicalEditor.getEditorState()._selection;
-      });
-    await focusEditor(page);
-    await page.keyboard.type('Hello world');
+          .__lexicalEditor.getEditorState()._selection
+      })
+    await focusEditor(page)
+    await page.keyboard.type('Hello world')
     expect(await getInternalSelection()).toEqual(
       expect.objectContaining({
         anchor: expect.objectContaining({
@@ -50,9 +50,9 @@ test.describe('Focus', () => {
         focus: expect.objectContaining({
           offset: 11,
         }),
-      }),
-    );
-    await click(page, '.tree-view-output');
+      })
+    )
+    await click(page, '.tree-view-output')
     expect(await getInternalSelection()).toEqual(
       expect.objectContaining({
         anchor: expect.objectContaining({
@@ -61,7 +61,7 @@ test.describe('Focus', () => {
         focus: expect.objectContaining({
           offset: 11,
         }),
-      }),
-    );
-  });
-});
+      })
+    )
+  })
+})

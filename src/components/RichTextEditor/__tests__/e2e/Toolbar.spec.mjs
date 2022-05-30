@@ -6,7 +6,7 @@
  *
  */
 
-import {selectAll} from '../keyboardShortcuts/index.mjs';
+import { selectAll } from '../keyboardShortcuts/index.mjs'
 import {
   assertHTML,
   click,
@@ -20,28 +20,28 @@ import {
   selectFromAlignDropdown,
   selectFromInsertDropdown,
   test,
-} from '../utils/index.mjs';
+} from '../utils/index.mjs'
 
 const IMAGE_URL =
   E2E_PORT === 3000
     ? '/src/images/yellow-flower.jpg'
-    : '/assets/yellow-flower.bf6d0400.jpg';
+    : '/assets/yellow-flower.bf6d0400.jpg'
 
 test.describe('Toolbar', () => {
-  test.beforeEach(({isCollab, page}) =>
-    initialize({isCollab, page, showNestedEditorTreeView: false}),
-  );
+  test.beforeEach(({ isCollab, page }) =>
+    initialize({ isCollab, page, showNestedEditorTreeView: false })
+  )
 
-  test('Insert image caption + table', async ({page, isPlainText}) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
+  test('Insert image caption + table', async ({ page, isPlainText }) => {
+    test.skip(isPlainText)
+    await focusEditor(page)
 
     // Add caption
-    await insertSampleImage(page);
-    await click(page, '.editor-image img');
-    await click(page, '.image-caption-button');
-    await focus(page, '.ImageNode__contentEditable');
-    await page.keyboard.type('Yellow flower in tilt shift lens');
+    await insertSampleImage(page)
+    await click(page, '.editor-image img')
+    await click(page, '.image-caption-button')
+    await focus(page, '.ImageNode__contentEditable')
+    await page.keyboard.type('Yellow flower in tilt shift lens')
     await assertHTML(
       page,
       html`
@@ -51,14 +51,16 @@ test.describe('Toolbar', () => {
               <img
                 alt="Yellow flower in tilt shift lens"
                 draggable="false"
-                src="${IMAGE_URL}" />
+                src="${IMAGE_URL}"
+              />
             </div>
             <div>
               <div
                 contenteditable="true"
                 role="textbox"
                 spellcheck="true"
-                data-lexical-editor="true">
+                data-lexical-editor="true"
+              >
                 <p dir="ltr">
                   <span data-lexical-text="true">
                     Yellow flower in tilt shift lens
@@ -73,31 +75,25 @@ test.describe('Toolbar', () => {
       {
         ignoreClasses: true,
         ignoreInlineStyles: true,
-      },
-    );
+      }
+    )
 
     // Delete image
     // TODO Revisit the a11y side of NestedEditors
     await evaluate(page, () => {
-      const p = document.querySelector('[contenteditable="true"] p');
-      document.getSelection().setBaseAndExtent(p, 0, p, 0);
-    });
-    await selectAll(page);
-    await page.keyboard.press('Delete');
-    await assertHTML(
-      page,
-      html`
-        <p><br /></p>
-      `,
-      {
-        ignoreClasses: true,
-        ignoreInlineStyles: true,
-      },
-    );
+      const p = document.querySelector('[contenteditable="true"] p')
+      document.getSelection().setBaseAndExtent(p, 0, p, 0)
+    })
+    await selectAll(page)
+    await page.keyboard.press('Delete')
+    await assertHTML(page, html` <p><br /></p> `, {
+      ignoreClasses: true,
+      ignoreInlineStyles: true,
+    })
 
     // Add table
-    await selectFromInsertDropdown(page, '.table');
-    await click(page, '[data-test-id="table-model-confirm-insert"] button');
+    await selectFromInsertDropdown(page, '.table')
+    await click(page, '[data-test-id="table-model-confirm-insert"] button')
 
     await assertHTML(
       page,
@@ -197,17 +193,17 @@ test.describe('Toolbar', () => {
       {
         ignoreClasses: true,
         ignoreInlineStyles: true,
-      },
-    );
-  });
+      }
+    )
+  })
 
-  test('Center align image', async ({page, isPlainText, isCollab}) => {
+  test('Center align image', async ({ page, isPlainText, isCollab }) => {
     // Image selection can't be synced in collab
-    test.skip(isPlainText || isCollab);
-    await focusEditor(page);
+    test.skip(isPlainText || isCollab)
+    await focusEditor(page)
 
-    await insertSampleImage(page);
-    await click(page, '.editor-image img');
+    await insertSampleImage(page)
+    await click(page, '.editor-image img')
     await assertHTML(
       page,
       html`
@@ -215,14 +211,16 @@ test.describe('Toolbar', () => {
           <span
             class="editor-image"
             contenteditable="false"
-            data-lexical-decorator="true">
+            data-lexical-decorator="true"
+          >
             <div draggable="true">
               <img
                 alt="Yellow flower in tilt shift lens"
                 class="focused"
                 draggable="false"
                 src="${IMAGE_URL}"
-                style="height: inherit; max-width: 500px; width: inherit" />
+                style="height: inherit; max-width: 500px; width: inherit"
+              />
             </div>
             <button class="image-caption-button">Add Caption</button>
             <div class="image-resizer image-resizer-n"></div>
@@ -236,12 +234,12 @@ test.describe('Toolbar', () => {
           </span>
           <br />
         </p>
-      `,
-    );
+      `
+    )
 
-    await focus(page, '.editor-image');
-    await page.pause();
-    await selectFromAlignDropdown(page, '.center-align');
+    await focus(page, '.editor-image')
+    await page.pause()
+    await selectFromAlignDropdown(page, '.center-align')
     await assertHTML(
       page,
       html`
@@ -249,14 +247,16 @@ test.describe('Toolbar', () => {
           <span
             class="editor-image"
             contenteditable="false"
-            data-lexical-decorator="true">
+            data-lexical-decorator="true"
+          >
             <div draggable="true">
               <img
                 alt="Yellow flower in tilt shift lens"
                 class="focused"
                 draggable="false"
                 src="${IMAGE_URL}"
-                style="height: inherit; max-width: 500px; width: inherit" />
+                style="height: inherit; max-width: 500px; width: inherit"
+              />
             </div>
             <button class="image-caption-button">Add Caption</button>
             <div class="image-resizer image-resizer-n"></div>
@@ -270,7 +270,7 @@ test.describe('Toolbar', () => {
           </span>
           <br />
         </p>
-      `,
-    );
-  });
-});
+      `
+    )
+  })
+})

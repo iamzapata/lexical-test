@@ -13,7 +13,7 @@ import {
   selectCharacters,
   toggleUnderline,
   undo,
-} from '../keyboardShortcuts/index.mjs';
+} from '../keyboardShortcuts/index.mjs'
 import {
   assertHTML,
   assertSelection,
@@ -21,27 +21,27 @@ import {
   focusEditor,
   initialize,
   test,
-} from '../utils/index.mjs';
+} from '../utils/index.mjs'
 
 async function checkHTMLExpectationsIncludingUndoRedo(
   page,
   forwardHTML,
   undoHTML,
-  isCollab,
+  isCollab
 ) {
-  await assertHTML(page, forwardHTML);
+  await assertHTML(page, forwardHTML)
   if (isCollab || undoHTML === 'none') {
     // Collab uses its own undo/redo
-    return;
+    return
   }
-  await undo(page);
-  await assertHTML(page, undoHTML);
-  await redo(page);
-  await assertHTML(page, forwardHTML);
+  await undo(page)
+  await assertHTML(page, undoHTML)
+  await redo(page)
+  await assertHTML(page, forwardHTML)
 }
 
 test.describe('Markdown', () => {
-  test.beforeEach(({isCollab, page}) => initialize({isCollab, page}));
+  test.beforeEach(({ isCollab, page }) => initialize({ isCollab, page }))
   const triggersAndExpectations = [
     {
       expectation: '<h1 class="PlaygroundEditorTheme__h1"><br></h1>',
@@ -187,13 +187,13 @@ test.describe('Markdown', () => {
       markdownText: '_**test**_ ',
       undoHTML: 'none', // italic, bold
     },
-  ];
+  ]
   // forward case is the normal case.
   // undo case is when the user presses undo.
 
-  const count = triggersAndExpectations.length;
+  const count = triggersAndExpectations.length
   for (let i = 0; i < count; ++i) {
-    const markdownText = triggersAndExpectations[i].markdownText;
+    const markdownText = triggersAndExpectations[i].markdownText
 
     if (triggersAndExpectations[i].isBlockTest === false) {
       test(`Should create stylized (e.g. BIUS) text from plain text using a markdown shortcut e.g. ${markdownText}`, async ({
@@ -201,87 +201,87 @@ test.describe('Markdown', () => {
         isPlainText,
         isCollab,
       }) => {
-        test.skip(isPlainText);
-        const text = 'x' + markdownText + 'y';
+        test.skip(isPlainText)
+        const text = 'x' + markdownText + 'y'
 
-        await focusEditor(page);
-        await page.keyboard.type(text);
-        await moveLeft(page, text.length);
+        await focusEditor(page)
+        await page.keyboard.type(text)
+        await moveLeft(page, text.length)
         await assertSelection(page, {
           anchorOffset: 0,
           anchorPath: [0, 0, 0],
           focusOffset: 0,
           focusPath: [0, 0, 0],
-        });
+        })
 
-        await moveRight(page, 1 + markdownText.length);
+        await moveRight(page, 1 + markdownText.length)
 
         // Trigger markdown.
-        await page.keyboard.type(' ');
+        await page.keyboard.type(' ')
 
         await checkHTMLExpectationsIncludingUndoRedo(
           page,
           triggersAndExpectations[i].expectation,
           triggersAndExpectations[i].undoHTML,
-          isCollab,
-        );
-      });
+          isCollab
+        )
+      })
 
       test(`Should create stylized (e.g. BIUS) text from already stylized text using a markdown shortcut e.g. ${markdownText}`, async ({
         page,
         isPlainText,
         isCollab,
       }) => {
-        test.skip(isPlainText);
+        test.skip(isPlainText)
 
-        const text = 'x' + markdownText + 'y';
+        const text = 'x' + markdownText + 'y'
 
-        await focusEditor(page);
-        await page.keyboard.type(text);
-        await moveLeft(page, text.length);
+        await focusEditor(page)
+        await page.keyboard.type(text)
+        await moveLeft(page, text.length)
         await assertSelection(page, {
           anchorOffset: 0,
           anchorPath: [0, 0, 0],
           focusOffset: 0,
           focusPath: [0, 0, 0],
-        });
+        })
 
         // Select first 2 characters.
-        await selectCharacters(page, 'right', 2);
+        await selectCharacters(page, 'right', 2)
 
         // Make underline.
-        await toggleUnderline(page);
+        await toggleUnderline(page)
 
         // Back to beginning.
-        await moveLeft(page, 2);
+        await moveLeft(page, 2)
 
         // Move to end.
-        await moveRight(page, text.length);
+        await moveRight(page, text.length)
 
         // Select last two characters.
-        await selectCharacters(page, 'left', 2);
+        await selectCharacters(page, 'left', 2)
 
         // Make underline.
-        await toggleUnderline(page);
+        await toggleUnderline(page)
 
         // Back to beginning of text.
-        await moveLeft(page, text.length);
+        await moveLeft(page, text.length)
 
         // Move after markdown text.
-        await moveRight(page, 1 + markdownText.length);
+        await moveRight(page, 1 + markdownText.length)
 
         // Trigger markdown.
-        await page.keyboard.type(' ');
+        await page.keyboard.type(' ')
 
-        await assertHTML(page, triggersAndExpectations[i].stylizedExpectation);
+        await assertHTML(page, triggersAndExpectations[i].stylizedExpectation)
 
         await checkHTMLExpectationsIncludingUndoRedo(
           page,
           triggersAndExpectations[i].stylizedExpectation,
           triggersAndExpectations[i].stylizedUndoHTML,
-          isCollab,
-        );
-      });
+          isCollab
+        )
+      })
     }
 
     if (triggersAndExpectations[i].isBlockTest === true) {
@@ -290,23 +290,23 @@ test.describe('Markdown', () => {
         isPlainText,
         isCollab,
       }) => {
-        test.skip(isPlainText);
+        test.skip(isPlainText)
 
-        await focusEditor(page);
+        await focusEditor(page)
 
-        await page.keyboard.type(markdownText);
+        await page.keyboard.type(markdownText)
 
-        const forwardHTML = triggersAndExpectations[i].expectation;
+        const forwardHTML = triggersAndExpectations[i].expectation
 
-        const undoHTML = `<p class="PlaygroundEditorTheme__paragraph"><span data-lexical-text="true">${markdownText}</span></p>`;
+        const undoHTML = `<p class="PlaygroundEditorTheme__paragraph"><span data-lexical-text="true">${markdownText}</span></p>`
 
         await checkHTMLExpectationsIncludingUndoRedo(
           page,
           forwardHTML,
           triggersAndExpectations[i].undoHTML || undoHTML,
-          isCollab,
-        );
-      });
+          isCollab
+        )
+      })
     }
 
     if (triggersAndExpectations[i].markdownImport.length > 0) {
@@ -315,23 +315,23 @@ test.describe('Markdown', () => {
         isPlainText,
         isCollab,
       }) => {
-        test.skip(isPlainText);
-        await focusEditor(page);
+        test.skip(isPlainText)
+        await focusEditor(page)
 
         await page.keyboard.type(
-          '```markdown ' + triggersAndExpectations[i].markdownImport,
-        );
-        await click(page, 'i.markdown');
+          '```markdown ' + triggersAndExpectations[i].markdownImport
+        )
+        await click(page, 'i.markdown')
 
-        const html = triggersAndExpectations[i].importExpectation;
-        await assertHTML(page, html);
+        const html = triggersAndExpectations[i].importExpectation
+        await assertHTML(page, html)
 
         // Click on markdow toggle twice to run import -> export loop and then
         // validate that it's the same rich text after full cycle
-        await click(page, 'i.markdown');
-        await click(page, 'i.markdown');
-        await assertHTML(page, html);
-      });
+        await click(page, 'i.markdown')
+        await click(page, 'i.markdown')
+        await assertHTML(page, html)
+      })
     }
   }
-});
+})

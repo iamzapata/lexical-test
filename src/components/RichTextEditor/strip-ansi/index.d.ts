@@ -12,6 +12,6 @@ stripAnsi('\u001B]8;;https://github.com\u0007Click\u001B]8;;\u0007');
 //=> 'Click'
 ```
 */
-declare function stripAnsi(string: string): string;
+declare function stripAnsi(string: string): string
 
-export = stripAnsi;
+export = stripAnsi

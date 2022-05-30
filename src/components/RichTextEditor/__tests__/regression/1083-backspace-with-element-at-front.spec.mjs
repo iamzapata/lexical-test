@@ -10,7 +10,7 @@ import {
   moveToLineEnd,
   selectAll,
   selectCharacters,
-} from '../keyboardShortcuts/index.mjs';
+} from '../keyboardShortcuts/index.mjs'
 import {
   assertHTML,
   click,
@@ -18,98 +18,101 @@ import {
   html,
   initialize,
   test,
-} from '../utils/index.mjs';
+} from '../utils/index.mjs'
 
 test.describe('Regression test #1083', () => {
-  test.beforeEach(({isCollab, page}) => initialize({isCollab, page}));
+  test.beforeEach(({ isCollab, page }) => initialize({ isCollab, page }))
   test(`Backspace with ElementNode at the front of the paragraph`, async ({
     page,
     isPlainText,
   }) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
+    test.skip(isPlainText)
+    await focusEditor(page)
 
-    await page.keyboard.type('Hello');
-    await selectAll(page);
-    await click(page, '.link');
+    await page.keyboard.type('Hello')
+    await selectAll(page)
+    await click(page, '.link')
 
-    await moveToLineEnd(page);
-    await page.keyboard.type('World');
+    await moveToLineEnd(page)
+    await page.keyboard.type('World')
 
     await assertHTML(
       page,
       html`
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <a
             href="https://"
             class="PlaygroundEditorTheme__link PlaygroundEditorTheme__ltr"
-            dir="ltr">
+            dir="ltr"
+          >
             <span data-lexical-text="true">Hello</span>
           </a>
           <span data-lexical-text="true">World</span>
         </p>
-      `,
-    );
+      `
+    )
 
-    await selectAll(page);
-    await page.keyboard.press('Backspace');
+    await selectAll(page)
+    await page.keyboard.press('Backspace')
 
     await assertHTML(
       page,
-      html`
-        <p class="PlaygroundEditorTheme__paragraph"><br /></p>
-      `,
-    );
-  });
+      html` <p class="PlaygroundEditorTheme__paragraph"><br /></p> `
+    )
+  })
 
   test(`Backspace with ElementNode at the front of the selection`, async ({
     page,
     isPlainText,
   }) => {
-    test.skip(isPlainText);
-    await focusEditor(page);
+    test.skip(isPlainText)
+    await focusEditor(page)
 
-    await page.keyboard.type('Say');
+    await page.keyboard.type('Say')
 
-    await page.keyboard.type('Hello');
-    await selectCharacters(page, 'left', 'Hello'.length);
-    await click(page, '.link');
+    await page.keyboard.type('Hello')
+    await selectCharacters(page, 'left', 'Hello'.length)
+    await click(page, '.link')
 
-    await moveToLineEnd(page);
-    await page.keyboard.type('World');
+    await moveToLineEnd(page)
+    await page.keyboard.type('World')
 
     await assertHTML(
       page,
       html`
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">Say</span>
           <a
             href="https://"
             class="PlaygroundEditorTheme__link PlaygroundEditorTheme__ltr"
-            dir="ltr">
+            dir="ltr"
+          >
             <span data-lexical-text="true">Hello</span>
           </a>
           <span data-lexical-text="true">World</span>
         </p>
-      `,
-    );
+      `
+    )
 
-    await selectCharacters(page, 'left', 'HelloWorld'.length);
-    await page.keyboard.press('Backspace');
+    await selectCharacters(page, 'left', 'HelloWorld'.length)
+    await page.keyboard.press('Backspace')
 
     await assertHTML(
       page,
       html`
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">Say</span>
         </p>
-      `,
-    );
-  });
-});
+      `
+    )
+  })
+})

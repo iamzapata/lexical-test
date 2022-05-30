@@ -6,35 +6,35 @@
  *
  */
 
-import type {EditorConfig, LexicalNode, SerializedTextNode} from 'lexical';
+import type { EditorConfig, LexicalNode, SerializedTextNode } from 'lexical'
 
-import {Spread} from 'globals';
-import {TextNode} from 'lexical';
+import { Spread } from 'globals'
+import { TextNode } from 'lexical'
 
 export type SerializedKeywordNode = Spread<
   {
-    type: 'keyword';
-    version: 1;
+    type: 'keyword'
+    version: 1
   },
   SerializedTextNode
->;
+>
 
 export class KeywordNode extends TextNode {
   static getType(): string {
-    return 'keyword';
+    return 'keyword'
   }
 
   static clone(node: KeywordNode): KeywordNode {
-    return new KeywordNode(node.__text, node.__key);
+    return new KeywordNode(node.__text, node.__key)
   }
 
   static importJSON(serializedNode: SerializedKeywordNode): KeywordNode {
-    const node = $createKeywordNode(serializedNode.text);
-    node.setFormat(serializedNode.format);
-    node.setDetail(serializedNode.detail);
-    node.setMode(serializedNode.mode);
-    node.setStyle(serializedNode.style);
-    return node;
+    const node = $createKeywordNode(serializedNode.text)
+    node.setFormat(serializedNode.format)
+    node.setDetail(serializedNode.detail)
+    node.setMode(serializedNode.mode)
+    node.setStyle(serializedNode.style)
+    return node
   }
 
   exportJSON(): SerializedKeywordNode {
@@ -42,35 +42,35 @@ export class KeywordNode extends TextNode {
       ...super.exportJSON(),
       type: 'keyword',
       version: 1,
-    };
+    }
   }
 
   createDOM(config: EditorConfig): HTMLElement {
-    const dom = super.createDOM(config);
-    dom.style.cursor = 'default';
-    dom.className = 'keyword';
-    return dom;
+    const dom = super.createDOM(config)
+    dom.style.cursor = 'default'
+    dom.className = 'keyword'
+    return dom
   }
 
   canInsertTextBefore(): boolean {
-    return false;
+    return false
   }
 
   canInsertTextAfter(): boolean {
-    return false;
+    return false
   }
 
   isTextEntity(): true {
-    return true;
+    return true
   }
 }
 
 export function $createKeywordNode(keyword: string): KeywordNode {
-  return new KeywordNode(keyword);
+  return new KeywordNode(keyword)
 }
 
 export function $isKeywordNode(
-  node: LexicalNode | null | undefined | undefined,
+  node: LexicalNode | null | undefined | undefined
 ): boolean {
-  return node instanceof KeywordNode;
+  return node instanceof KeywordNode
 }

@@ -13,52 +13,55 @@ import {
   html,
   initialize,
   test,
-} from '../utils/index.mjs';
+} from '../utils/index.mjs'
 
 test.describe('Clear', () => {
-  test.beforeEach(({isCollab, page}) => initialize({isCollab, page}));
-  test(`can clear the editor`, async ({page}) => {
-    await focusEditor(page);
+  test.beforeEach(({ isCollab, page }) => initialize({ isCollab, page }))
+  test(`can clear the editor`, async ({ page }) => {
+    await focusEditor(page)
 
-    await page.keyboard.type('foo');
+    await page.keyboard.type('foo')
     await assertHTML(
       page,
       html`
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">foo</span>
         </p>
-      `,
-    );
+      `
+    )
 
-    await click(page, '.action-button.clear');
+    await click(page, '.action-button.clear')
 
-    await click(page, 'button:has-text("Cancel")');
+    await click(page, 'button:has-text("Cancel")')
     await assertHTML(
       page,
       html`
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">foo</span>
         </p>
-      `,
-    );
+      `
+    )
 
-    await click(page, '.action-button.clear');
+    await click(page, '.action-button.clear')
 
-    await click(page, 'button:has-text("Clear")');
-    await page.keyboard.type('bar');
+    await click(page, 'button:has-text("Clear")')
+    await page.keyboard.type('bar')
     await assertHTML(
       page,
       html`
         <p
           class="PlaygroundEditorTheme__paragraph PlaygroundEditorTheme__ltr"
-          dir="ltr">
+          dir="ltr"
+        >
           <span data-lexical-text="true">bar</span>
         </p>
-      `,
-    );
-  });
-});
+      `
+    )
+  })
+})
