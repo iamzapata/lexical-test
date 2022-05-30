@@ -30,6 +30,7 @@
     "lexical": "0.2.9",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-router-dom": "6",
     "y-websocket": "^1.4.3",
     "yjs": "^13.5.38"
   },
