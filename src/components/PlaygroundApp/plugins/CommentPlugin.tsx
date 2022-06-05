@@ -52,8 +52,8 @@ import { cloneThread, createComment, createThread } from '../commenting'
 import useModal from '../hooks/useModal'
 import CommentEditorTheme from '../themes/CommentEditorTheme'
 import Button from '../ui/Button'
-import ContentEditable from '../ui/ContentEditable.jsx'
-import Placeholder from '../ui/Placeholder.jsx'
+import ContentEditable from '../ui/ContentEditable.js'
+import Placeholder from '../ui/Placeholder.js'
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand()
 
